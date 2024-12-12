@@ -6,17 +6,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe by SAGAR</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            color: white;
+        }
+
+        body {
+            background-color: #191825;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            margin-top: 1rem;
+        }
+
+        header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5vmin;
+            width: 90vw;
+            max-width: 400px;
+        }
+
+        .box {
+            aspect-ratio: 1 / 1;
+            font-size: 2rem;
+            color: #ebbef8;
+            background-color: #865DFF;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box:disabled {
+            cursor: not-allowed;
+        }
+
+        .scores {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .scores p {
+            margin: 0.5rem 0;
+        }
+
+        .message {
+            height: 95vmin;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+            display: none;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        #msg {
+            color: #FFA3FD;
+            font-size: 1.5rem;
+        }
+
+        button {
+            color: #ebbef8;
+            background-color: #865DFF;
+            padding: 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #Reset,
+        #New {
+            margin: 1rem 0;
+        }
+
+        footer {
+            background-color: #282534;
+            padding: 1rem 0;
+            color: #ebbef8;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 3rem;
+            }
+
+            .game {
+                gap: 1vmin;
+            }
+
+            .box {
+                font-size: 1.5rem;
+            }
+
+            #msg {
+                font-size: 1.25rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <header>
         <h1>Tic Tac Toe</h1>
     </header>
-    <div class="message hide">
+    <div class="message">
         <p id="msg">Winner</p>
         <button id="New">New Game</button>
     </div>
-
     <main>
         <div class="scores">
             <p id="player1Score">Player 1 Score: 0</p>
@@ -24,7 +155,6 @@
             <p id="winCount">Wins: 0</p>
         </div>
         <div class="container">
-
             <div class="game">
                 <button class="box"></button>
                 <button class="box"></button>
@@ -39,7 +169,79 @@
         </div>
         <button id="Reset">Reset Game</button>
     </main>
-    <script src="script.js"></script>
+    <footer>
+        Copyright © 2024 Sagar Waghmare. All rights reserved.
+    </footer>
+    <script>
+        let boxes = document.querySelectorAll(".box");
+        let resetBtn = document.querySelector("#Reset");
+        let newGame = document.querySelector("#New");
+        let message = document.querySelector(".message");
+        let msg = document.querySelector("#msg");
+        let player1Score = 0;
+        let player2Score = 0;
+        let player1 = true;
+
+        const winChance = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+
+        const resetGame = () => {
+            player1 = true;
+            boxes.forEach(box => {
+                box.innerText = "";
+                box.disabled = false;
+            });
+            message.classList.remove("show");
+        };
+
+        const checkWinner = () => {
+            for (const pattern of winChance) {
+                const [a, b, c] = pattern;
+                if (boxes[a].innerText && boxes[a].innerText === boxes[b].innerText && boxes[a].innerText === boxes[c].innerText) {
+                    msg.innerText = ${boxes[a].innerText} wins!;
+                    message.classList.add("show");
+                    boxes.forEach(box => box.disabled = true);
+                    if (boxes[a].innerText === "O") {
+                        player1Score++;
+                    } else {
+                        player2Score++;
+                    }
+                    updateScore();
+                    return;
+                }
+            }
+
+            if ([...boxes].every(box => box.innerText !== "")) {
+                msg.innerText = "It's a draw!";
+                message.classList.add("show");
+            }
+        };
+
+        const updateScore = () => {
+            document.getElementById("player1Score").innerText = Player 1 Score: ${player1Score};
+            document.getElementById("player2Score").innerText = Player 2 Score: ${player2Score};
+        };
+
+        boxes.forEach(box => {
+            box.addEventListener("click", () => {
+                box.innerText = player1 ? "O" : "X";
+                box.disabled = true;
+                player1 = !player1;
+                checkWinner();
+            });
+        });
+
+        resetBtn.addEventListener("click", resetGame);
+        newGame.addEventListener("click", resetGame);
+    </script>
 </body>
 
 </html>
