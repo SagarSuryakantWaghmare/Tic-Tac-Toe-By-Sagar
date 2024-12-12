@@ -151,7 +151,6 @@
         <div class="scores">
             <p id="player1Score">Player 1 Score: 0</p>
             <p id="player2Score">Player 2 Score: 0</p>
-            <p id="winCount">Wins: 0</p>
         </div>
         <div class="container">
             <div class="game">
@@ -205,7 +204,7 @@
             for (const pattern of winChance) {
                 const [a, b, c] = pattern;
                 if (boxes[a].innerText && boxes[a].innerText === boxes[b].innerText && boxes[a].innerText === boxes[c].innerText) {
-                    msg.innerText = ${boxes[a].innerText} wins!;
+                    msg.innerText = `${boxes[a].innerText} wins!`;
                     message.classList.add("show");
                     boxes.forEach(box => box.disabled = true);
                     if (boxes[a].innerText === "O") {
@@ -225,8 +224,8 @@
         };
 
         const updateScore = () => {
-            document.getElementById("player1Score").innerText = Player 1 Score: ${player1Score};
-            document.getElementById("player2Score").innerText = Player 2 Score: ${player2Score};
+            document.getElementById("player1Score").innerText = `Player 1 Score: ${player1Score}`;
+            document.getElementById("player2Score").innerText = `Player 2 Score: ${player2Score}`;
         };
 
         boxes.forEach(box => {
